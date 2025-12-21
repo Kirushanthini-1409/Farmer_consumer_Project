@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmConnect - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0fdf4;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(34, 197, 94, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(34, 197, 94, 0.1) 0px, transparent 50%);
+        }
+
+        .role-card.selected {
+            border-color: #16a34a;
+            background-color: #f0fdf4;
+            color: #16a34a;
+        }
+
+        .role-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- Main Container -->
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-4xl overflow-hidden flex flex-col md:flex-row min-h-[600px]">
+        
+        <!-- Left Side: Image -->
+        <div class="hidden md:flex md:w-1/2 bg-green-600 relative flex-col justify-between p-12 text-white">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1495107334309-fcf20504a5ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')] bg-cover bg-center opacity-20"></div>
+            <div class="relative z-10">
+                <div class="flex items-center gap-3 mb-6">
+                    <i class="fas fa-leaf text-3xl"></i>
+                    <h1 class="text-3xl font-bold">FarmConnect</h1>
+                </div>
+                <p class="text-green-100 text-lg">Welcome back! Please login to access your dashboard.</p>
+            </div>
+            <div class="relative z-10">
+                <p class="text-sm text-green-200">© 2024 FarmConnect Inc.</p>
+            </div>
+        </div>
+
+        <!-- Right Side: Login Form -->
+        <div class="w-full md:w-1/2 p-8 md:p-12 relative flex flex-col justify-center">
+            
+            <!-- Auth Toggle (Links) -->
+            <div class="flex justify-end mb-8 absolute top-8 right-8">
+                <div class="bg-gray-100 p-1 rounded-lg inline-flex">
+                    <button class="px-6 py-2 rounded-md text-sm font-medium bg-white shadow-sm text-gray-800 cursor-default">Login</button>
+                    <a href="register.html" class="px-6 py-2 rounded-md text-sm font-medium text-gray-500 hover:text-gray-800 transition-all duration-300">Register</a>
+                </div>
+            </div>
+
+            <!-- Header -->
+            <div class="mb-8 mt-12 md:mt-0 text-center md:text-left">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Welcome Back</h2>
+                <p class="text-gray-500">Enter your credentials to access your account.</p>
+            </div>
+
+            <!-- Role Selection -->
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-3">I am a...</label>
+                <div class="grid grid-cols-2 gap-4">
+                    <div onclick="selectRole('farmer')" id="role-farmer" class="role-card cursor-pointer border-2 border-gray-200 rounded-xl p-4 flex flex-col items-center justify-center gap-2 transition-all duration-300">
+                        <i class="fas fa-tractor text-2xl mb-1"></i>
+                        <span class="font-medium">Farmer</span>
+                    </div>
+                    <div onclick="selectRole('consumer')" id="role-consumer" class="role-card cursor-pointer border-2 border-gray-200 rounded-xl p-4 flex flex-col items-center justify-center gap-2 transition-all duration-300">
+                        <i class="fas fa-shopping-basket text-2xl mb-1"></i>
+                        <span class="font-medium">Consumer</span>
+                    </div>
+                </div>
+                <input type="hidden" id="selected-role" value="">
+                <p id="role-error" class="hidden text-red-500 text-xs mt-1">Please select a role.</p>
+            </div>
+
+            <!-- Form -->
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email or Phone</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-envelope text-gray-400"></i>
+                        </div>
+                        <input type="text" id="identity" required class="pl-10 block w-full rounded-lg border-gray-300 border focus:border-green-500 focus:ring-green-500 sm:text-sm py-2.5" placeholder="name@example.com">
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <label class="block text-sm font-medium text-gray-700">Password</label>
+                        <a href="#" class="text-xs text-green-600 hover:text-green-500 font-medium">Forgot?</a>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-lock text-gray-400"></i>
+                        </div>
+                        <input type="password" id="password" required class="pl-10 block w-full rounded-lg border-gray-300 border focus:border-green-500 focus:ring-green-500 sm:text-sm py-2.5" placeholder="••••••••">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 transform hover:scale-[1.02]">
+                    Sign In
+                </button>
+            </form>
+
+            <div class="mt-6">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-gray-500">Or continue with</span>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <button onclick="alert('Google Login')" class="w-full inline-flex justify-center items-center py-2.5 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                        <img class="h-5 w-5 mr-2" src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
+                        <span>Sign in with Google</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+        <div class="bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3">
+            <i class="fas fa-info-circle text-green-400"></i>
+            <span id="toast-message">Notification</span>
+        </div>
+    </div>
+
+    <script>
+        let selectedRole = '';
+
+        function selectRole(role) {
+            selectedRole = role;
+            document.getElementById('selected-role').value = role;
+            document.getElementById('role-error').classList.add('hidden');
+            
+            if (role === 'farmer') {
+                document.getElementById('role-farmer').classList.add('selected');
+                document.getElementById('role-consumer').classList.remove('selected');
+            } else {
+                document.getElementById('role-consumer').classList.add('selected');
+                document.getElementById('role-farmer').classList.remove('selected');
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            if (!selectedRole) {
+                document.getElementById('role-error').classList.remove('hidden');
+                return;
+            }
+            showToast(`Logging in as ${selectedRole}...`);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
+        }
+    </script>
+</body>
+</html>
