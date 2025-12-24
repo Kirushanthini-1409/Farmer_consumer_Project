@@ -157,14 +157,48 @@
             }
         }
 
-        function handleLogin(e) {
+        
+        async function handleLogin(e) {
             e.preventDefault();
+
             if (!selectedRole) {
-                document.getElementById('role-error').classList.remove('hidden');
+                document.getElementById("role-error").classList.remove("hidden");
                 return;
             }
-            showToast(`Logging in as ${selectedRole}...`);
+
+            const data = {
+                email: document.getElementById("identity").value,
+                password: document.getElementById("password").value
+            };
+
+            try {
+                const res = await fetch("http://localhost:5000/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+                });
+
+                const result = await res.json();
+
+                if (!res.ok) {
+                alert(result.message);
+                return;
+                }
+
+                // Redirect based on role
+                if (result.role === "farmer") {
+                window.location.href = "farmer-dashboard.html";
+                } else {
+                window.location.href = "consumer-dashboard.html";
+                }
+
+            } catch (err) {
+                alert("Backend not reachable");
+            }
         }
+
+
+
 
         function showToast(message) {
             const toast = document.getElementById('toast');
