@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriConnect | Farmer Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* Custom Green Theme */
+        .bg-leaf-green { background-color: #2F855A; }
+        .text-leaf-green { color: #2F855A; }
+        .border-leaf-green { border-color: #2F855A; }
+        
+        /* Smooth fade in animation */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+
+    <nav class="bg-leaf-green text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-seedling text-2xl mr-2"></i>
+                    <span class="font-bold text-xl">AgriConnect</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span>Welcome, <strong>Ramesh Kumar</strong></span>
+                    <button class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <div class="col-span-1 space-y-4">
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-leaf-green">
+                    <h3 class="text-gray-500 text-sm uppercase font-semibold">Total Sales (This Month)</h3>
+                    <p class="text-3xl font-bold text-gray-800">₹ 24,500</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-yellow-500">
+                    <h3 class="text-gray-500 text-sm uppercase font-semibold">Pending Orders</h3>
+                    <p class="text-3xl font-bold text-gray-800">4</p>
+                </div>
+            </div>
+
+            <div class="col-span-1 md:col-span-2">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="bg-gray-100 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                        <h2 class="text-xl font-bold text-gray-800"><i class="fas fa-plus-circle text-leaf-green mr-2"></i> Add New Produce</h2>
+                    </div>
+
+                    <div class="p-6">
+                        <form id="produceForm" onsubmit="handleListProduce(event)">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2">Product Name</label>
+                                    <select id="productName" class="w-full border-gray-300 rounded-md shadow-sm border p-3 focus:ring-2 focus:ring-green-500 outline-none" required>
+                                        <option value="" disabled selected>Select Crop</option>
+                                        <option value="Tomato">Tomato</option>
+                                        <option value="Onion">Onion</option>
+                                        <option value="Rice">Rice (Basmati)</option>
+                                        <option value="Potato">Potato</option>
+                                        <option value="Wheat">Wheat</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2">Harvest Date</label>
+                                    <input type="date" id="harvestDate" class="w-full border-gray-300 rounded-md shadow-sm border p-3 focus:ring-2 focus:ring-green-500 outline-none" required>
+                                </div>
+
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2">Quantity Available (kg)</label>
+                                    <input type="number" id="quantity" placeholder="e.g. 100" class="w-full border-gray-300 rounded-md shadow-sm border p-3 focus:ring-2 focus:ring-green-500 outline-none" required>
+                                </div>
+
+                                <div class="flex items-end">
+                                    <button type="button" onclick="getAiSuggestion()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md transition duration-200 shadow-md">
+                                        <i class="fas fa-robot mr-2"></i> Get AI Price Suggestion
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="aiResultBox" class="hidden mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4 fade-in">
+                                <div class="flex flex-col md:flex-row justify-between items-center">
+                                    <div class="mb-4 md:mb-0">
+                                        <h4 class="text-blue-800 font-bold text-lg"><i class="fas fa-chart-line mr-2"></i>Market Analysis</h4>
+                                        <p class="text-sm text-blue-600">Based on high demand in your region and past sales data.</p>
+                                        <div class="mt-2 text-3xl font-bold text-gray-800">
+                                            ₹ <span id="suggestedPriceDisplay">0</span> <span class="text-sm font-normal text-gray-500">/ kg</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <button type="button" onclick="acceptPrice()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow-sm">
+                                            Accept Price
+                                        </button>
+                                        <button type="button" onclick="rejectPrice()" class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded shadow-sm">
+                                            Set My Own
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-6">
+                                <label class="block text-gray-700 font-medium mb-2">Final Price per kg (₹)</label>
+                                <input type="number" id="finalPrice" placeholder="Enter your price" class="w-full border-gray-300 rounded-md shadow-sm border p-3 focus:ring-2 focus:ring-green-500 outline-none font-bold text-lg text-green-700" required>
+                            </div>
+
+                            <hr class="my-6 border-gray-200">
+
+                            <button type="submit" class="w-full bg-leaf-green hover:bg-green-800 text-white font-bold py-4 px-6 rounded-lg shadow-lg transform transition hover:-translate-y-1">
+                                <i class="fas fa-check-circle mr-2"></i> List Produce for Consumers
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock Base Prices for AI Logic
+        const marketRates = {
+            'Tomato': 40,
+            'Onion': 35,
+            'Rice': 60,
+            'Potato': 25,
+            'Wheat': 30
+        };
+
+        let currentSuggestedPrice = 0;
+
+        // 1. Function to simulate AI calculation
+        function getAiSuggestion() {
+            const product = document.getElementById('productName').value;
+            const resultBox = document.getElementById('aiResultBox');
+            
+            if (!product) {
+                alert("Please select a product first.");
+                return;
+            }
+
+            // Simulate AI "Thinking"
+            const basePrice = marketRates[product];
+            // Add some random variance (-5 to +10 rupees) based on "Demand"
+            const variance = Math.floor(Math.random() * 15) - 5; 
+            currentSuggestedPrice = basePrice + variance;
+
+            // Update UI
+            document.getElementById('suggestedPriceDisplay').innerText = currentSuggestedPrice;
+            resultBox.classList.remove('hidden');
+        }
+
+        // 2. User Accepts AI Price
+        function acceptPrice() {
+            document.getElementById('finalPrice').value = currentSuggestedPrice;
+            // Visual feedback
+            const input = document.getElementById('finalPrice');
+            input.classList.add('bg-green-50');
+            setTimeout(() => input.classList.remove('bg-green-50'), 1000);
+        }
+
+        // 3. User Rejects AI Price (Focuses input for manual entry)
+        function rejectPrice() {
+            document.getElementById('finalPrice').value = '';
+            document.getElementById('finalPrice').focus();
+        }
+
+        // 4. Final Submission
+        function handleListProduce(e) {
+            e.preventDefault();
+            
+            const product = document.getElementById('productName').value;
+            const qty = document.getElementById('quantity').value;
+            const price = document.getElementById('finalPrice').value;
+            const date = document.getElementById('harvestDate').value;
+
+            // In a real app, you would send this data to your Backend API here
+            console.log("Submitting:", { product, qty, price, date });
+
+            alert(`Success! Your ${qty}kg of ${product} is now live for consumers at ₹${price}/kg.`);
+            
+            // Reset form
+            document.getElementById('produceForm').reset();
+            document.getElementById('aiResultBox').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
