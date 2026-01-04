@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Performance & Savings - FarmConnect</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <nav class="bg-gray-800 text-white p-4 shadow-lg flex justify-between items-center">
+        <div class="font-bold text-xl flex items-center gap-2">
+            <i class="fas fa-chart-line text-green-400"></i> Analytics
+        </div>
+        <div>
+            <a href="javascript:history.back()" class="text-gray-300 hover:text-white mr-4">Back to Dashboard</a>
+            <button onclick="logout()" class="bg-red-600 px-4 py-1 rounded text-sm font-bold">Logout</button>
+        </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto p-4 mt-6">
+        
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800" id="page-title">Your Performance</h1>
+            <p class="text-gray-500" id="page-subtitle">Track your impact and finances.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-500">
+                <div class="text-gray-500 text-sm font-bold uppercase mb-1" id="card-1-label">Total Earnings</div>
+                <div class="text-3xl font-bold text-gray-800" id="card-1-value">₹0</div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-500">
+                <div class="text-gray-500 text-sm font-bold uppercase mb-1">Total Orders</div>
+                <div class="text-3xl font-bold text-gray-800" id="card-2-value">0</div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-orange-500">
+                <div class="text-gray-500 text-sm font-bold uppercase mb-1" id="card-3-label">Food Waste Saved</div>
+                <div class="text-3xl font-bold text-gray-800" id="card-3-value">0 kg</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-md">
+                <h3 class="font-bold text-gray-700 mb-4" id="chart-title">Monthly Overview</h3>
+                <canvas id="performanceChart"></canvas>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <h3 class="font-bold text-gray-700 mb-4">Recent Activity</h3>
+                <div class="space-y-4" id="activity-feed">
+                    <div class="text-gray-400 text-sm text-center italic">Loading activity...</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        // --- PASTE YOUR CONFIG HERE ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyDdcoeskwx7B-zQoTNS7B5kmkFrnd9X1dg",
+            authDomain: "farmconnect-86377.firebaseapp.com",
+            projectId: "farmconnect-86377",
+            storageBucket: "farmconnect-86377.firebasestorage.app",
+            messagingSenderId: "1008958287296",
+            appId: "1:1008958287296:web:09f5825e269536b7b0ec25"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        function logout() {
+            auth.signOut().then(() => window.location.href = "index.html");
+        }
+
+        // --- DASHBOARD LOGIC ---
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // Get Role to customize page
+                db.collection('users').doc(user.uid).get().then(doc => {
+                    if(doc.exists) {
+                        const role = doc.data().role;
+                        setupDashboard(role);
+                    } else {
+                        setupDashboard('consumer'); // Default
+                    }
+                });
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        function setupDashboard(role) {
+            // 1. Customize Text based on Role
+            if (role === 'farmer') {
+                document.getElementById('page-title').innerText = "Sales Performance";
+                document.getElementById('card-1-label').innerText = "Total Revenue";
+                document.getElementById('card-3-label').innerText = "Produce Saved (kg)";
+                document.getElementById('chart-title').innerText = "Revenue History (₹)";
+                
+                // Simulated Data for Demo Video
+                updateStats("₹12,450", "142", "320 kg");
+                renderChart("Earnings", [1200, 1900, 3000, 2500, 4000, 12450], 'rgb(22, 163, 74)'); // Green
+                renderActivity(['Sold 20kg Tomatoes', 'Sold 50kg Onions', 'Listed new Potatoes']);
+            } 
+            else {
+                document.getElementById('page-title').innerText = "Your Impact Savings";
+                document.getElementById('card-1-label').innerText = "Money Saved";
+                document.getElementById('card-3-label').innerText = "Food Rescued (kg)";
+                document.getElementById('chart-title').innerText = "Savings History (₹)";
+
+                // Simulated Data for Demo Video
+                updateStats("₹4,200", "28", "45 kg");
+                renderChart("Savings", [200, 450, 800, 1500, 2200, 4200], 'rgb(37, 99, 235)'); // Blue
+                renderActivity(['Bought Ugly Carrots', 'Rescued Spinach Bundle', 'Bought Discounted Apples']);
+            }
+        }
+
+        function updateStats(val1, val2, val3) {
+            document.getElementById('card-1-value').innerText = val1;
+            document.getElementById('card-2-value').innerText = val2;
+            document.getElementById('card-3-value').innerText = val3;
+        }
+
+        function renderActivity(items) {
+            const feed = document.getElementById('activity-feed');
+            feed.innerHTML = "";
+            items.forEach(item => {
+                feed.innerHTML += `
+                    <div class="flex items-center gap-3 border-b pb-3 last:border-0">
+                        <div class="bg-gray-100 p-2 rounded-full text-gray-600"><i class="fas fa-check"></i></div>
+                        <div>
+                            <p class="font-bold text-sm text-gray-800">${item}</p>
+                            <p class="text-xs text-gray-500">Just now</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderChart(label, dataPoints, color) {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: label,
+                        data: dataPoints,
+                        borderColor: color,
+                        backgroundColor: color.replace(')', ', 0.1)').replace('rgb', 'rgba'),
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
