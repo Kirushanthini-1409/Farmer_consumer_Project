@@ -19,13 +19,29 @@
 
     <div class="max-w-6xl mx-auto p-4">
         
-        <div class="bg-gray-200 h-48 rounded-xl mb-8 flex items-center justify-center text-gray-500 border-2 border-dashed border-gray-400">
-            <div class="text-center">
-                <i class="fas fa-map-marker-alt text-3xl mb-2"></i>
-                <p>Google Maps Area</p>
-                <p class="text-xs">(Requires API Key for live view)</p>
-            </div>
+        <div class="relative w-full h-64 rounded-lg overflow-hidden shadow-lg group cursor-pointer">
+    <img src="https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=12&size=800x400&maptype=roadmap&key=" 
+         onerror="this.src='https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80'"
+         class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500" 
+         alt="Local Farmers Map">
+    
+    <div class="absolute inset-0 bg-black bg-opacity-10 group-hover:bg-opacity-0 transition"></div>
+    
+    <div class="relative w-full h-64 rounded-lg overflow-hidden shadow-lg group cursor-pointer">
+    <img src="https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=12&size=800x400&maptype=roadmap&key=" 
+         onerror="this.src='https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80'"
+         class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500" 
+         alt="Local Farmers Map">
+    
+    <div class="absolute inset-0 bg-black bg-opacity-10 group-hover:bg-opacity-0 transition"></div>
+    
+    <div class="absolute top-1/2 left-1/3 transform -translate-x-1/2 -translate-y-1/2">
+            <i class="fas fa-map-marker-alt text-red-500 text-4xl drop-shadow-2xl animate-bounce"></i>
         </div>
+        <div class="absolute top-1/3 left-2/3 transform -translate-x-1/2 -translate-y-1/2">
+            <i class="fas fa-map-marker-alt text-green-600 text-4xl drop-shadow-2xl"></i>
+        </div>
+    </div>
 
         <h2 class="text-2xl font-bold mb-6 text-gray-800">Fresh Near You</h2>
 
