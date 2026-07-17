@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Browse produce — FarmConnect</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+<div id="nav"></div>
+
+<div class="container my-4">
+  <div class="row g-3">
+    <div class="col-lg-8">
+      <div class="card p-3 mb-3">
+        <div class="row g-2 align-items-end">
+          <div class="col-md-3">
+            <label class="form-label">Category</label>
+            <select class="form-select" id="fCategory">
+              <option value="">All</option>
+              <option value="vegetable">Vegetables</option>
+              <option value="fruit">Fruits</option>
+              <option value="dairy">Dairy</option>
+              <option value="eggs">Eggs</option>
+              <option value="grains">Grains</option>
+              <option value="homemade">Homemade</option>
+            </select>
+          </div>
+          <div class="col-md-2"><label class="form-label">Max ₹</label>
+            <input class="form-control" type="number" id="fMaxPrice" placeholder="any"></div>
+          <div class="col-md-4">
+            <label class="form-label d-block">Distance</label>
+            <div class="btn-group btn-group-sm" id="distChips">
+              <button class="btn btn-outline-success" data-km="2">2 km</button>
+              <button class="btn btn-outline-success" data-km="5">5 km</button>
+              <button class="btn btn-outline-success" data-km="10">10 km</button>
+              <button class="btn btn-outline-secondary active" data-km="">Any</button>
+            </div>
+          </div>
+          <div class="col-md-3 form-check pt-4 ms-2">
+            <input class="form-check-input" type="checkbox" id="fUgly">
+            <label class="form-check-label" for="fUgly">🥕 Ugly but Tasty only</label>
+          </div>
+        </div>
+        <div class="mt-2"><button class="btn btn-sm btn-success" id="useLocation">📍 Use my location</button>
+          <span class="text-muted small" id="locStatus">Location off — distance filter disabled</span></div>
+      </div>
+
+      <div id="uglyBanner" class="alert alert-warning" style="display:none">
+        🥕 <strong>Ugly but Tasty:</strong> perfectly good produce at 30–50% off — every purchase saves food from going to waste.
+      </div>
+      <div class="row g-3" id="items"></div>
+      <div id="emptyState" class="text-center text-muted my-5" style="display:none">
+        <div class="fs-1">🧺</div>No produce matches your filters yet. Try widening the distance or clearing filters.
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="sticky-panel">
+        <div id="map" class="mb-3"></div>
+        <div class="card p-3" id="cart">
+          <h5>🛒 Cart</h5>
+          <div id="cartItems" class="mb-2"></div>
+          <div class="d-flex justify-content-between fw-bold"><span>Total</span><span id="cartTotal">₹0</span></div>
+          <select class="form-select my-2" id="deliveryType">
+            <option value="delivery">🚚 Farmer delivery</option>
+            <option value="pickup">🧺 Self pickup</option>
+          </select>
+          <input class="form-control mb-2" id="address" placeholder="Delivery address">
+          <button class="btn btn-success" id="checkoutBtn">Checkout (simulated payment)</button>
+          <small class="text-muted mt-1">Prices and stock are re-validated on the server.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/browse.js"></script>
+</body>
+</html>

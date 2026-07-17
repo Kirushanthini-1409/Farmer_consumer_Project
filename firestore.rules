@@ -1,0 +1,42 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+    // Public catalogue: readable by anyone; only the backend service account writes.
+    match /products/{id}  { allow read: if true; allow write: if false; }
+    match /batches/{id}   { allow read: if true; allow write: if false; }
+    match /reviews/{id}   { allow read: if true; allow write: if false; }
+    match /group_orders/{id} { allow read: if true; allow write: if false; }
+    match /stats/{id}     { allow read: if true; allow write: if false; }
+
+    // Profiles: a user reads their own; farmer profiles are public (map/listings).
+    match /users/{uid} {
+      allow read: if (request.auth != null && request.auth.uid == uid)
+                  || resource.data.role == 'farmer';
+      allow write: if false;
+    }
+
+    // Orders: only the two parties (admin uses the backend, not client reads).
+    match /orders/{id} {
+      allow read: if request.auth != null
+                  && (request.auth.uid == resource.data.consumer_id
+                      || request.auth.uid == resource.data.farmer_id);
+      allow write: if false;
+      match /order_events/{eid} {
+        allow read: if request.auth != null
+                    && (request.auth.uid == get(/databases/$(db)/documents/orders/$(id)).data.consumer_id
+                        || request.auth.uid == get(/databases/$(db)/documents/orders/$(id)).data.farmer_id);
+        allow write: if false;
+      }
+    }
+
+    // Own notifications only.
+    match /notifications/{id} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.uid;
+      allow write: if false;
+    }
+
+    // Everything else (kyc_requests, reports, browse_history, price_reference, ledger…)
+    // is backend-only.
+    match /{document=**} { allow read, write: if false; }
+  }
+}

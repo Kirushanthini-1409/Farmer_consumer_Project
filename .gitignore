@@ -1,0 +1,13 @@
+# secrets — never commit service-account credentials
+*service-account*.json
+api/.env
+.env
+
+__pycache__/
+*.pyc
+.venv/
+venv/
+.firebase/
+firebase-debug.log
+node_modules/
+*.log

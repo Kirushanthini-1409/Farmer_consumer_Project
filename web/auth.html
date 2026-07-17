@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login / Sign up — FarmConnect</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+<div id="nav"></div>
+
+<div class="container my-4" style="max-width: 720px">
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#login">Login</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#signup">Sign up</button></li>
+  </ul>
+
+  <div class="tab-content border border-top-0 p-4 bg-white rounded-bottom">
+    <div class="tab-pane fade show active" id="login">
+      <form id="loginForm">
+        <div class="mb-3"><label class="form-label">Email</label>
+          <input class="form-control" type="email" id="loginEmail" required></div>
+        <div class="mb-3"><label class="form-label">Password</label>
+          <input class="form-control" type="password" id="loginPassword" required></div>
+        <button class="btn btn-success">Login</button>
+      </form>
+    </div>
+
+    <div class="tab-pane fade" id="signup">
+      <form id="signupForm">
+        <div class="row">
+          <div class="col-md-6 mb-3"><label class="form-label">Full name</label>
+            <input class="form-control" id="suName" required></div>
+          <div class="col-md-6 mb-3"><label class="form-label">Phone</label>
+            <input class="form-control" id="suPhone"></div>
+          <div class="col-md-6 mb-3"><label class="form-label">Email</label>
+            <input class="form-control" type="email" id="suEmail" required></div>
+          <div class="col-md-6 mb-3"><label class="form-label">Password (min 6 chars)</label>
+            <input class="form-control" type="password" id="suPassword" minlength="6" required></div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label d-block">I am a</label>
+          <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="role" id="roleConsumer" value="consumer" checked>
+            <label class="btn btn-outline-success" for="roleConsumer">🛒 Consumer</label>
+            <input type="radio" class="btn-check" name="role" id="roleFarmer" value="farmer">
+            <label class="btn btn-outline-success" for="roleFarmer">🌾 Farmer</label>
+          </div>
+        </div>
+
+        <div id="farmerFields" style="display:none">
+          <hr>
+          <p class="mb-1 fw-bold">Farm location <small class="text-muted">(click the map to drop your pin)</small></p>
+          <div id="pickMap" class="mb-2"></div>
+          <input type="hidden" id="suLat"><input type="hidden" id="suLng">
+          <div class="mb-3"><label class="form-label">Farm address (optional)</label>
+            <input class="form-control" id="suAddress" placeholder="Village / area, city"></div>
+          <p class="mb-1 fw-bold">Verification documents <small class="text-muted">(optional now — you can list products immediately; the Verified badge comes after admin approval)</small></p>
+          <div class="row">
+            <div class="col-md-6 mb-3"><label class="form-label">Government ID photo</label>
+              <input class="form-control" type="file" accept="image/*" id="suIdDoc"></div>
+            <div class="col-md-6 mb-3"><label class="form-label">Land record / FPO proof</label>
+              <input class="form-control" type="file" accept="image/*" id="suLandDoc"></div>
+          </div>
+        </div>
+        <button class="btn btn-success" id="signupBtn">Create account</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>
