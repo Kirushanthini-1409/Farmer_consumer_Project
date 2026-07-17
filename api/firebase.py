@@ -29,8 +29,10 @@ def init_app():
         cred = _EmulatorCredential()
     else:
         cred = None  # Application Default Credentials (gcloud)
-    options = {"projectId": os.environ.get("GCLOUD_PROJECT", "demo-farmconnect")}
-    _app = firebase_admin.initialize_app(cred, options)
+    options = {}
+    if os.environ.get("GCLOUD_PROJECT"):
+        options["projectId"] = os.environ.get("GCLOUD_PROJECT")
+    _app = firebase_admin.initialize_app(cred, options) if options else firebase_admin.initialize_app(cred)
     return _app
 
 
