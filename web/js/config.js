@@ -3,15 +3,15 @@
 // Firebase web app config (Firebase console → Project settings → Your apps).
 // This is PUBLIC by design; Firestore rules protect the data.
 const firebaseConfig = {
-  apiKey: "fake-api-key",            // any value works against the local emulator
-  authDomain: "demo-farmconnect.firebaseapp.com",
-  projectId: "demo-farmconnect",
-  appId: "demo",
+  apiKey: "AIzaSyBKD_v2ZYQlCzEjJyu5x0oz95VdmFdn4L4",
+  authDomain: "farmconnect-v2-2026.firebaseapp.com",
+  projectId: "farmconnect-v2-2026",
+  appId: "1:266774948308:web:50c740ac425cf91a508e41",
 };
 
-// Local demo: point the Firebase SDK at the emulator suite (auth :9099, firestore :8080).
-// Set to false and fill in real firebaseConfig values for production.
-const USE_EMULATOR = true;
+// Production: false. For local dev against the emulator suite set true and use
+// projectId "demo-farmconnect" (see README).
+const USE_EMULATOR = false;
 
 // Flask backend base URL: http://localhost:8000 in dev, your Render URL in prod.
 const API_BASE = "http://localhost:8000";
